@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  pytest:
+  test:
 
     runs-on: ubuntu-latest
 
