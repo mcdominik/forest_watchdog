@@ -7,7 +7,7 @@ from src.utils import my_transforms, my_device
 
 
 class ModifiedResNet18(nn.Module):
-    """Modified ResNet18, input shape [3,224, 224] 
+    """Modified ResNet18, input shape [3,224, 224]
     last layer changed to binary
     Args
     -------
@@ -15,7 +15,7 @@ class ModifiedResNet18(nn.Module):
 
     Methods
     -------
-    predict: returns prediction of custom image  
+    predict: returns prediction of custom image
     """
 
     CLASSES = ["fire_images", "non_fire_images"]
@@ -29,7 +29,7 @@ class ModifiedResNet18(nn.Module):
         return f"Modified ResNet18 with model: {self.model}"
 
     def _load(self, path: str) -> None:
-        """Load desired weights and print 
+        """Load desired weights and print
         current device (gpu or cpu)"""
         self.model = models.resnet18(pretrained=True)
         # freeze all params
@@ -45,12 +45,12 @@ class ModifiedResNet18(nn.Module):
         print(f"my_device is {my_device} ")
 
     def predict(self, image) -> str:
-        """Predict from custom image, you can try provide path 
+        """Predict from custom image, you can try provide path
         instead of image
         Args
         -------
         image: image object or path to image
-        
+
         returns -> 'fire' or 'no fire'
         """
         if type(image) == str:
