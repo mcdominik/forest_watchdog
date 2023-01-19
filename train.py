@@ -61,7 +61,7 @@ losses = []
 val_losses = []
 epoch_train_losses = []
 epoch_test_losses = []
-n_epochs = 2
+n_epochs = 4
 
 for epoch in range(n_epochs):
     epoch_loss = 0
@@ -74,7 +74,7 @@ for epoch in range(n_epochs):
         epoch_loss += loss/len(trainloader)
         losses.append(loss)
         epoch_train_losses.append(epoch_loss)
-        print('\nEpoch : {}, train loss : {}'.format(epoch+1,epoch_loss))
+        print(f'Epoch : {epoch+1}, train loss : {epoch_loss}')
         # validation doesnt requires gradient
     with torch.no_grad():
         cum_loss = 0
@@ -89,7 +89,7 @@ for epoch in range(n_epochs):
             cum_loss += loss/len(testloader)
             val_losses.append(val_loss.item())
         epoch_test_losses.append(cum_loss)
-        print('Epoch : {}, val loss : {}'.format(epoch+1,cum_loss))  
+        print(f'Epoch : {epoch+1}, val loss : {cum_loss}')  
         best_loss = min(epoch_test_losses)
         if cum_loss <= best_loss:
             best_model_wts = model.state_dict()

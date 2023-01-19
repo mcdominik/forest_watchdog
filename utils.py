@@ -2,7 +2,6 @@ import torch
 from torchvision import transforms
 
 my_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 my_transforms = transforms.Compose([transforms.Resize((224,224)),
                                 transforms.ToTensor(),                                
                                 transforms.Normalize(

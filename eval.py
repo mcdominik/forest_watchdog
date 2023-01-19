@@ -2,18 +2,33 @@ import torch
 import torchvision.models as models
 import torch.nn as nn
 from PIL import Image
-
+import io
 from utils import my_transforms, my_device
 
 
 class ModifiedResNet18(nn.Module):
+    '''Modified ResNet18, input shape [3,224, 224] 
+    last layer changed to binary
+    Args
+    -------
+    path: path to saved model
+
+    Methods
+    -------
+    predict: returns prediction of custom image  
+    '''
     CLASSES = ['fire_images', 'non_fire_images']
     def __init__(self, path) -> None:
         super().__init__()
         self.model = None
         self._load(path=path)
 
-    def _load(self, path):
+    def __repr__(self):
+        return f'Modified ResNet18 with model: {self.model}'
+
+    def _load(self, path: str) -> None:
+        '''Load desired weights and print 
+        current device (gpu or cpu)'''
         self.model = models.resnet18(pretrained=True)
         #freeze all params
         for params in self.model.parameters():
@@ -25,21 +40,29 @@ class ModifiedResNet18(nn.Module):
         self.model.load_state_dict(torch.load(path, map_location=torch.device(my_device)))
         print(f'my_device is {my_device} ')
 
-    def pre_image(self, image_path):
-        img = Image.open(image_path)
+    def predict(self, image) -> str:
+        '''Predict from custom image, you can try provide path 
+        instead of image
+        Args
+        -------
+        image: image object or path to image
+        
+        returns -> 'fire' or 'no fire'
+        '''
+        if type(image) == str:
+            img = Image.open(image)
+        else:
+            img = Image.open(io.BytesIO(image))
         img_normalized = my_transforms(img).float()
         img_normalized = img_normalized.unsqueeze_(0)
-        # input = Variable(image_tensor)
         img_normalized = img_normalized.to(my_device)
-        # print(img_normalized.shape)
         with torch.no_grad():
             self.model.eval()
             if torch.sigmoid(self.model(img_normalized.float())) < 0.5:
-                print("Prediction : fire")
                 return 'fire'
             else:
-                print("Prediction : no fire")
                 return 'no fire'
 
-my_net = ModifiedResNet18('models/working.pth')
-my_net.pre_image('example_images/forest2.jpg')
+if __name__ == "__main__": 
+    my_net = ModifiedResNet18('models/working.pth')
+    my_net.predict('example_images/forest2.jpg')
