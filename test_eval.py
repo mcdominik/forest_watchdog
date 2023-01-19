@@ -1,5 +1,5 @@
 import pytest
-from eval import ModifiedResNet18
+from src.eval import ModifiedResNet18
 
 
 class TestModifiedResNet18:
