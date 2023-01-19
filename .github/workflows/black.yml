@@ -10,4 +10,5 @@ jobs:
       - uses: psf/black@stable
         with:
           options: "--check --verbose"
+          version: "19.10b0"
           src: "./src"
