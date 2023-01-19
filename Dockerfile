@@ -10,13 +10,15 @@ COPY ./requirements.txt /app/requirements.txt
 # switch working directory
 # WORKDIR /app
 
-# install the dependencies and packages in the requirements file
-RUN pip install -r --no-cache-dir requirements.txt
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
 
+# install the dependencies and packages in the requirements file
+RUN pip install --no-cache-dir -r requirements.txt 
 # copy every content from the local file to the image
 COPY . /app
 
 # configure the container to run in an executed manner
 # ENTRYPOINT [ "python" ]
 
-CMD ["python","./src/uvicorn main:app --reload" ]
+# CMD ["python","./src/main.py" ]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3137"]

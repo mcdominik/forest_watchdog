@@ -3,7 +3,7 @@ import torchvision.models as models
 import torch.nn as nn
 from PIL import Image
 import io
-from src.utils import my_transforms, my_device
+from utils import my_transforms, my_device
 
 
 class ModifiedResNet18(nn.Module):

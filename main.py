@@ -1,17 +1,23 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
-from src.eval import ModifiedResNet18
-from src.utils import my_device
+from eval import ModifiedResNet18
+from utils import my_device
 
 
 app = FastAPI()
 my_net = ModifiedResNet18("models/working.pth")
 
 origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
     "https://mcdominik.github.io/forest_watchdog_front/",
     "http://localhost",
     "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "https://127.0.0.1:5500",
+
 ]
 
 app.add_middleware(
@@ -21,6 +27,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def root():
+    return {"AppStatus": "Running"}
 
 
 @app.get("/getMyDevice")
@@ -33,3 +43,9 @@ async def create_upload_file(file: UploadFile):
     image = await file.read()
     result = my_net.predict(image)
     return {"state": result}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host='::', port=3137)
+    # development
+    # uvicorn.run(app, host='0.0.0.0', port=8000)

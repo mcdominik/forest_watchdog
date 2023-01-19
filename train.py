@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from torch.nn.modules.loss import BCEWithLogitsLoss
 from tqdm import tqdm
 
-from src.utils import my_transforms, my_device
+from utils import my_transforms, my_device
 
 # where you want to save new model
 save_path = "./cpu_working.pth"
