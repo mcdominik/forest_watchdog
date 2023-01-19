@@ -4,8 +4,9 @@ from fastapi import FastAPI, File, UploadFile
 from eval import ModifiedResNet18
 from utils import my_device
 
+
 app = FastAPI()
-my_net = ModifiedResNet18('models/working.pth')
+my_net = ModifiedResNet18("models/working.pth")
 
 origins = [
     "https://mcdominik.github.io/forest_watchdog_front/",
@@ -21,9 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get('/getMyDevice')
+
+@app.get("/getMyDevice")
 def read_device():
     return {"mode": str(my_device)}
+
 
 @app.post("/predict")
 async def create_upload_file(file: UploadFile):

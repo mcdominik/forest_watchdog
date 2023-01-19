@@ -7,7 +7,7 @@ from utils import my_transforms, my_device
 
 
 class ModifiedResNet18(nn.Module):
-    '''Modified ResNet18, input shape [3,224, 224] 
+    """Modified ResNet18, input shape [3,224, 224] 
     last layer changed to binary
     Args
     -------
@@ -16,39 +16,43 @@ class ModifiedResNet18(nn.Module):
     Methods
     -------
     predict: returns prediction of custom image  
-    '''
-    CLASSES = ['fire_images', 'non_fire_images']
+    """
+
+    CLASSES = ["fire_images", "non_fire_images"]
+
     def __init__(self, path) -> None:
         super().__init__()
         self.model = None
         self._load(path=path)
 
     def __repr__(self):
-        return f'Modified ResNet18 with model: {self.model}'
+        return f"Modified ResNet18 with model: {self.model}"
 
     def _load(self, path: str) -> None:
-        '''Load desired weights and print 
-        current device (gpu or cpu)'''
+        """Load desired weights and print 
+        current device (gpu or cpu)"""
         self.model = models.resnet18(pretrained=True)
-        #freeze all params
+        # freeze all params
         for params in self.model.parameters():
             params.requires_grad_ = False
-        #changed final layer to be binary
+        # changed final layer to be binary
         nr_filters = self.model.fc.in_features
         self.model.fc = nn.Linear(nr_filters, 1)
         self.model = self.model.to(my_device)
-        self.model.load_state_dict(torch.load(path, map_location=torch.device(my_device)))
-        print(f'my_device is {my_device} ')
+        self.model.load_state_dict(
+            torch.load(path, map_location=torch.device(my_device))
+        )
+        print(f"my_device is {my_device} ")
 
     def predict(self, image) -> str:
-        '''Predict from custom image, you can try provide path 
+        """Predict from custom image, you can try provide path 
         instead of image
         Args
         -------
         image: image object or path to image
         
         returns -> 'fire' or 'no fire'
-        '''
+        """
         if type(image) == str:
             img = Image.open(image)
         else:
@@ -59,10 +63,11 @@ class ModifiedResNet18(nn.Module):
         with torch.no_grad():
             self.model.eval()
             if torch.sigmoid(self.model(img_normalized.float())) < 0.5:
-                return 'fire'
+                return "fire"
             else:
-                return 'no fire'
+                return "no fire"
 
-if __name__ == "__main__": 
-    my_net = ModifiedResNet18('models/working.pth')
-    my_net.predict('example_images/forest2.jpg')
+
+if __name__ == "__main__":
+    my_net = ModifiedResNet18("models/working.pth")
+    my_net.predict("example_images/forest2.jpg")
