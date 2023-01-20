@@ -14,9 +14,14 @@ origins = [
     "https://localhost.tiangolo.com",
     "https://mcdominik.github.io/forest_watchdog_front/",
     "http://localhost",
+    "https://mcdominik.github.io",
+    "http://mcdominik.github.io",
     "http://localhost:5500",
     "http://127.0.0.1:5500",
     "https://127.0.0.1:5500",
+    "https://127.0.0.1:5501",
+    "http://127.0.0.1:5501",
+
 
 ]
 
@@ -43,7 +48,3 @@ async def create_upload_file(file: UploadFile):
     image = await file.read()
     result = my_net.predict(image)
     return {"state": result}
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host='0.0.0.0', port=3137)
